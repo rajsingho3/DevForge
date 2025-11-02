@@ -46,10 +46,7 @@ export default function Home() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-purple-500/10 border border-purple-500/20 mb-6">
-              <Sparkles className="w-4 h-4 text-purple-400" />
-              <span className="text-sm text-purple-300">Powered by Next.js & AI</span>
-            </div>
+            
             <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold leading-tight">
               Build. Collaborate. Ship — Faster with{" "}
               <span className="bg-clip-text text-transparent bg-linear-to-r from-purple-400 to-pink-400">
@@ -78,34 +75,12 @@ export default function Home() {
               className="inline-flex items-center justify-center gap-3 px-8 py-4 rounded-full bg-linear-to-r from-purple-500 to-pink-500 text-white font-semibold shadow-xl hover:shadow-purple-500/25 hover:scale-105 transition-all"
             >
               Start Free
-              <Sparkles className="w-5 h-5" />
+              
             </Link>
-            <Link 
-              href="#demo" 
-              className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-lg border border-purple-700/50 text-sm font-medium hover:bg-purple-900/30 transition-all"
-            >
-              View Demo
-            </Link>
+           
           </motion.div>
 
-          <motion.div 
-            className="flex items-center gap-6 pt-8" 
-            initial={{ opacity: 0 }} 
-            animate={{ opacity: 1 }} 
-            transition={{ delay: 0.5 }}
-          >
-            <div className="flex -space-x-2">
-              {[1, 2, 3, 4].map((i) => (
-                <div key={i} className="w-10 h-10 rounded-full bg-linear-to-br from-purple-500 to-pink-500 border-2 border-[#1a0b2e] flex items-center justify-center text-xs font-bold">
-                  {String.fromCharCode(64 + i)}
-                </div>
-              ))}
-            </div>
-            <div>
-              <div className="text-slate-200 font-semibold">Trusted by 10,000+ developers</div>
-              <div className="text-sm text-slate-400">Join innovative teams worldwide</div>
-            </div>
-          </motion.div>
+          
         </div>
 
         <motion.div 
@@ -188,44 +163,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* DEMO / GIF */}
-      <section id="demo" className="max-w-7xl mx-auto px-6 py-20">
-        <motion.div 
-          className="bg-linear-to-br from-purple-900/30 to-transparent rounded-3xl p-8 lg:p-12 flex flex-col lg:flex-row items-center gap-12 border border-purple-800/30" 
-          initial={{ opacity: 0, y: 20 }} 
-          whileInView={{ opacity: 1, y: 0 }} 
-          viewport={{ once: true }}
-        >
-          <div className="w-full lg:w-1/2 space-y-6">
-            <h3 className="text-3xl font-bold">Interactive Demo</h3>
-            <p className="text-slate-300 text-lg leading-relaxed">
-              See CodeForge in action — the in-browser editor, live collaboration cursors, and seamless deploy flow.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4">
-              <Link 
-                href="#try" 
-                className="inline-flex items-center justify-center px-6 py-3 rounded-lg border border-purple-700/50 font-medium hover:bg-purple-900/30 hover:border-purple-500/50 transition-all"
-              >
-                Try Demo
-              </Link>
-              <Link 
-                href="#tour" 
-                className="inline-flex items-center justify-center px-6 py-3 rounded-lg bg-purple-800/40 font-medium hover:bg-purple-800/60 transition-all"
-              >
-                Watch Tour
-              </Link>
-            </div>
-          </div>
-
-          <div className="w-full lg:w-1/2">
-            <div className="rounded-2xl overflow-hidden border border-purple-800/50 shadow-2xl bg-[#0d0221]">
-              <div className="aspect-video relative bg-linear-to-br from-purple-950/20 to-pink-950/20 flex items-center justify-center">
-                <div className="text-slate-500 text-sm">Demo preview</div>
-              </div>
-            </div>
-          </div>
-        </motion.div>
-      </section>
+      
 
       {/* TESTIMONIALS */}
       <section className="max-w-7xl mx-auto px-6 py-20">
