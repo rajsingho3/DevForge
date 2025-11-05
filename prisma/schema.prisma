@@ -17,6 +17,7 @@ model User {
   
   accounts      Account[]
   sessions      Session[]
+  playgrounds   Playground[]
   
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
@@ -70,4 +71,35 @@ model VerificationToken {
   createdAt  DateTime @default(now())
  
   @@unique([identifier, token])
+}
+
+// Playground model - stores user projects/playgrounds
+model Playground {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  title       String
+  description String?
+  template    String
+  userId      String   @db.ObjectId
+  
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  Starmark    Starmark[]
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  @@index([userId])
+}
+
+// Starmark model - for marking projects as favorites
+model Starmark {
+  id           String     @id @default(auto()) @map("_id") @db.ObjectId
+  isMarked     Boolean    @default(false)
+  playgroundId String     @db.ObjectId
+  
+  playground   Playground @relation(fields: [playgroundId], references: [id], onDelete: Cascade)
+  
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  
+  @@index([playgroundId])
 }
