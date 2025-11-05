@@ -37,8 +37,11 @@ import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import Link from "next/link"
 import { useState } from "react"
+import { useRouter } from "next/navigation"
 import { MoreHorizontal, Edit3, Trash2, ExternalLink, Copy, Download, Eye } from "lucide-react"
+import { toast } from "sonner"
 import MarkedToggleButton from "./MarkedToggleButton"
+import { updatePlayground, deletePlayground, duplicatePlayground } from "../actions"
 
 
 interface ProjectTableProps {
@@ -55,71 +58,144 @@ export default function ProjectTable({
 }: ProjectTableProps) {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
   const [editDialogOpen, setEditDialogOpen] = useState(false)
-  const [selectedProject] = useState<Project | null>(null)
+  const [selectedProject, setSelectedProject] = useState<Project | null>(null)
   const [editData, setEditData] = useState<EditProjectData>({ title: "", description: "" })
-  const [isLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
+  const router = useRouter()
   
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const handleEditClick = (_project: Project) => {
-//    Write your logic here
+  const handleEditClick = (project: Project) => {
+    setSelectedProject(project)
+    setEditData({
+      title: project.title,
+      description: project.description || "",
+    })
+    setEditDialogOpen(true)
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const handleDeleteClick = async (_project: Project) => {
-    //    Write your logic here
+  const handleDeleteClick = async (project: Project) => {
+    setSelectedProject(project)
+    setDeleteDialogOpen(true)
   }
 
   const handleUpdateProject = async () => {
-   //    Write your logic here
+    if (!selectedProject || !editData.title.trim()) {
+      toast.error("Please enter a valid title")
+      return
+    }
+
+    setIsLoading(true)
+    try {
+      const result = await updatePlayground(selectedProject.id, {
+        title: editData.title.trim(),
+        description: editData.description.trim(),
+      })
+
+      if (result.success) {
+        toast.success("Project updated successfully")
+        setEditDialogOpen(false)
+        setSelectedProject(null)
+        router.refresh()
+      } else {
+        toast.error(result.error || "Failed to update project")
+      }
+    } catch (error) {
+      console.error("Error updating project:", error)
+      toast.error("An unexpected error occurred")
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   const handleDeleteProject = async () => {
-   //    Write your logic here
+    if (!selectedProject) return
+
+    setIsLoading(true)
+    try {
+      const result = await deletePlayground(selectedProject.id)
+
+      if (result.success) {
+        toast.success("Project deleted successfully")
+        setDeleteDialogOpen(false)
+        setSelectedProject(null)
+        router.refresh()
+      } else {
+        toast.error(result.error || "Failed to delete project")
+      }
+    } catch (error) {
+      console.error("Error deleting project:", error)
+      toast.error("An unexpected error occurred")
+    } finally {
+      setIsLoading(false)
+    }
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const handleDuplicateProject = async (_project: Project) => {
-    //    Write your logic here
+  const handleDuplicateProject = async (project: Project) => {
+    try {
+      const result = await duplicatePlayground(project.id)
+
+      if (result.success) {
+        toast.success("Project duplicated successfully")
+        router.refresh()
+      } else {
+        toast.error(result.error || "Failed to duplicate project")
+      }
+    } catch (error) {
+      console.error("Error duplicating project:", error)
+      toast.error("An unexpected error occurred")
+    }
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const copyProjectUrl = (_projectId: string) => {
-    //    Write your logic here
+  const copyProjectUrl = (projectId: string) => {
+    const url = `${window.location.origin}/playground/${projectId}`
+    navigator.clipboard.writeText(url)
+    toast.success("Project URL copied to clipboard")
   }
 
   return (
     <>
-      <div className="border rounded-lg overflow-hidden">
+      <div className="border rounded-xl overflow-hidden shadow-sm bg-card">
         <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Project</TableHead>
-              <TableHead>Template</TableHead>
-              <TableHead>Created</TableHead>
-              <TableHead>User</TableHead>
-              <TableHead className="w-[50px]">Actions</TableHead>
+          <TableHeader className="bg-muted/50">
+            <TableRow className="hover:bg-muted/50">
+              <TableHead className="font-semibold">Project</TableHead>
+              <TableHead className="font-semibold">Template</TableHead>
+              <TableHead className="font-semibold">Created</TableHead>
+              <TableHead className="font-semibold">User</TableHead>
+              <TableHead className="w-[50px] font-semibold">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {projects.map((project) => (
-              <TableRow key={project.id}>
+              <TableRow key={project.id} className="hover:bg-muted/30 transition-colors">
                 <TableCell className="font-medium">
-                  <div className="flex flex-col">
-                    <Link href={`/playground/${project.id}`} className="hover:underline">
-                      <span className="font-semibold">{project.title}</span>
+                  <div className="flex flex-col gap-1">
+                    <Link 
+                      href={`/playground/${project.id}`} 
+                      className="hover:text-[#E93F3F] transition-colors font-semibold text-base"
+                    >
+                      {project.title}
                     </Link>
-                    <span className="text-sm text-gray-500 line-clamp-1">{project.description}</span>
+                    {project.description && (
+                      <span className="text-sm text-muted-foreground line-clamp-1">
+                        {project.description}
+                      </span>
+                    )}
                   </div>
                 </TableCell>
                 <TableCell>
-                  <Badge variant="outline" className="bg-[#E93F3F15] text-[#E93F3F] border-[#E93F3F]">
+                  <Badge 
+                    variant="outline" 
+                    className="bg-[#E93F3F]/10 text-[#E93F3F] border-[#E93F3F]/20 font-medium"
+                  >
                     {project.template}
                   </Badge>
                 </TableCell>
-                <TableCell>{format(new Date(project.createdAt), "MMM d, yyyy")}</TableCell>
+                <TableCell className="text-muted-foreground">
+                  {format(new Date(project.createdAt), "MMM d, yyyy")}
+                </TableCell>
                 <TableCell>
-                  <div className="flex items-center gap-2">
-                    <div className="w-8 h-8 rounded-full overflow-hidden">
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 rounded-full overflow-hidden ring-2 ring-border">
                       <Image
                         src={project.user.image || "/placeholder.svg"}
                         alt={project.user.name}
@@ -128,7 +204,7 @@ export default function ProjectTable({
                         className="object-cover"
                       />
                     </div>
-                    <span className="text-sm">{project.user.name}</span>
+                    <span className="text-sm font-medium">{project.user.name}</span>
                   </div>
                 </TableCell>
                 <TableCell>

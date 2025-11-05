@@ -1,8 +1,10 @@
 "use client";
 
 import { Star } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
+import { toggleStarmark } from "../actions";
 
 interface MarkedToggleButtonProps {
   markedForRevision?: boolean;
@@ -12,16 +14,20 @@ interface MarkedToggleButtonProps {
 export default function MarkedToggleButton({ markedForRevision = false, id }: MarkedToggleButtonProps) {
   const [isMarked, setIsMarked] = useState(markedForRevision);
   const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
 
   const handleToggle = async () => {
     setIsLoading(true);
     try {
-      // TODO: Implement the toggle star API call
-      // const response = await toggleStarmark(id);
-      console.log('Toggling starmark for project:', id);
+      const response = await toggleStarmark(id);
       
-      setIsMarked(!isMarked);
-      toast.success(isMarked ? "Removed from starred" : "Added to starred");
+      if (response.success) {
+        setIsMarked(!isMarked);
+        toast.success(isMarked ? "Removed from starred" : "Added to starred");
+        router.refresh();
+      } else {
+        toast.error(response.error || "Failed to update starred status");
+      }
     } catch (error) {
       toast.error("Failed to update starred status");
       console.error("Error toggling starmark:", error);

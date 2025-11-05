@@ -61,49 +61,49 @@ export function DashboardSidebar({ initialPlaygroundData }: { initialPlaygroundD
   const recentPlaygrounds = initialPlaygroundData
 
   return (
-    <Sidebar variant="inset" collapsible="icon" className="border border-r">
-      <SidebarHeader>
+    <Sidebar variant="inset" collapsible="icon" className="border-r bg-background">
+      <SidebarHeader className="border-b">
         <div className="flex items-center gap-2 px-4 py-3 justify-center">
-          <Image src={"/logo.svg"} alt="logo" height={60} width={60} />
+          <Image src={"/logo.svg"} alt="DevForge" height={50} width={50} className="dark:invert" />
+          <span className="font-bold text-xl group-data-[collapsible=icon]:hidden">DevForge</span>
         </div>
-       
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
           <SidebarMenu>
             <SidebarMenuItem>
               <SidebarMenuButton asChild isActive={pathname === "/"} tooltip="Home">
-                <Link href="/">
-                  <Home className="h-4 w-4" />
-                  <span>Home</span>
+                <Link href="/" className="gap-3">
+                  <Home className="h-5 w-5" />
+                  <span className="font-medium">Home</span>
                 </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
             <SidebarMenuItem>
               <SidebarMenuButton asChild isActive={pathname === "/dashboard"} tooltip="Dashboard">
-                <Link href="/dashboard">
-                  <LayoutDashboard className="h-4 w-4" />
-                  <span>Dashboard</span>
+                <Link href="/dashboard" className="gap-3">
+                  <LayoutDashboard className="h-5 w-5" />
+                  <span className="font-medium">Dashboard</span>
                 </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
-          
           </SidebarMenu>
         </SidebarGroup>
 
         <SidebarGroup>
-          <SidebarGroupLabel>
+          <SidebarGroupLabel className="text-xs uppercase tracking-wider">
             <Star className="h-4 w-4 mr-2" />
-            Starred
+            Starred Projects
           </SidebarGroupLabel>
           <SidebarGroupAction title="Add starred playground">
             <Plus className="h-4 w-4" />
           </SidebarGroupAction>
           <SidebarGroupContent>
             <SidebarMenu>
-
-              {starredPlaygrounds.length === 0 && recentPlaygrounds.length === 0 ? (
-                <div className="text-center text-muted-foreground py-4 w-full">Create your playground</div>
+              {starredPlaygrounds.length === 0 ? (
+                <div className="px-4 py-3 text-sm text-muted-foreground group-data-[collapsible=icon]:hidden">
+                  No starred projects
+                </div>
               ) : (
                 starredPlaygrounds.map((playground) => {
                   const IconComponent = lucideIconMap[playground.icon] || Code2;
@@ -113,10 +113,11 @@ export function DashboardSidebar({ initialPlaygroundData }: { initialPlaygroundD
                         asChild
                         isActive={pathname === `/playground/${playground.id}`}
                         tooltip={playground.name}
+                        className="gap-3"
                       >
                         <Link href={`/playground/${playground.id}`}>
                           {IconComponent && <IconComponent className="h-4 w-4" />}
-                          <span>{playground.name}</span>
+                          <span className="truncate">{playground.name}</span>
                         </Link>
                       </SidebarMenuButton>
                     </SidebarMenuItem>
@@ -128,52 +129,62 @@ export function DashboardSidebar({ initialPlaygroundData }: { initialPlaygroundD
         </SidebarGroup>
 
         <SidebarGroup>
-          <SidebarGroupLabel>
+          <SidebarGroupLabel className="text-xs uppercase tracking-wider">
             <History className="h-4 w-4 mr-2" />
-            Recent
+            Recent Projects
           </SidebarGroupLabel>
           <SidebarGroupAction title="Create new playground">
             <FolderPlus className="h-4 w-4" />
           </SidebarGroupAction>
           <SidebarGroupContent>
             <SidebarMenu>
-              {starredPlaygrounds.length === 0 && recentPlaygrounds.length === 0 ? null : (
-                recentPlaygrounds.map((playground) => {
-                  const IconComponent = lucideIconMap[playground.icon] || Code2;
-                  return (
-                    <SidebarMenuItem key={playground.id}>
-                      <SidebarMenuButton
-                        asChild
-                        isActive={pathname === `/playground/${playground.id}`}
-                        tooltip={playground.name}
-                      >
-                        <Link href={`/playground/${playground.id}`}>
-                          {IconComponent && <IconComponent className="h-4 w-4" />}
-                          <span>{playground.name}</span>
+              {recentPlaygrounds.length === 0 ? (
+                <div className="px-4 py-8 text-center text-sm text-muted-foreground group-data-[collapsible=icon]:hidden">
+                  <p className="mb-2">No projects yet</p>
+                  <p className="text-xs">Create your first playground</p>
+                </div>
+              ) : (
+                <>
+                  {recentPlaygrounds.slice(0, 5).map((playground) => {
+                    const IconComponent = lucideIconMap[playground.icon] || Code2;
+                    return (
+                      <SidebarMenuItem key={playground.id}>
+                        <SidebarMenuButton
+                          asChild
+                          isActive={pathname === `/playground/${playground.id}`}
+                          tooltip={playground.name}
+                          className="gap-3"
+                        >
+                          <Link href={`/playground/${playground.id}`}>
+                            {IconComponent && <IconComponent className="h-4 w-4" />}
+                            <span className="truncate">{playground.name}</span>
+                          </Link>
+                        </SidebarMenuButton>
+                      </SidebarMenuItem>
+                    );
+                  })}
+                  {recentPlaygrounds.length > 5 && (
+                    <SidebarMenuItem>
+                      <SidebarMenuButton asChild tooltip="View all" className="gap-3">
+                        <Link href="/dashboard" className="text-muted-foreground hover:text-foreground">
+                          <span className="text-sm">View all projects →</span>
                         </Link>
                       </SidebarMenuButton>
                     </SidebarMenuItem>
-                  );
-                })
+                  )}
+                </>
               )}
-              <SidebarMenuItem>
-                <SidebarMenuButton asChild tooltip="View all">
-                  <Link href="/playgrounds">
-                    <span className="text-sm text-muted-foreground">View all playgrounds</span>
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
-      <SidebarFooter>
+      <SidebarFooter className="border-t">
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton asChild tooltip="Settings">
+            <SidebarMenuButton asChild tooltip="Settings" className="gap-3">
               <Link href="/settings">
-                <Settings className="h-4 w-4" />
-                <span>Settings</span>
+                <Settings className="h-5 w-5" />
+                <span className="font-medium">Settings</span>
               </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
