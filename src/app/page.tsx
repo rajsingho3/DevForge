@@ -4,6 +4,7 @@ import React from "react";
 import { motion } from "motion/react";
 import { Code, Users, Cloud, Zap, CheckCircle, Sparkles } from "lucide-react";
 import Link from "next/link";
+import { useAuth } from "@/hooks/use-auth";
 
 interface FeatureCardProps {
   icon: React.ReactNode;
@@ -18,23 +19,48 @@ interface TestimonialProps {
 }
 
 export default function Home() {
+  const { isAuthenticated, isLoading } = useAuth();
+
   return (
     <div className="min-h-screen bg-linear-to-b from-[#1a0b2e] to-[#0d0221] text-slate-100">
       {/* NAV */}
       <nav className="max-w-7xl mx-auto px-6 py-6 flex items-center justify-between sticky top-0 z-50 backdrop-blur-lg bg-[#1a0b2e]/80 border-b border-purple-800/30">
         <Link href="/" className="flex items-center gap-3 group">
           <div className="w-10 h-10 rounded-xl bg-linear-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white font-bold shadow-lg group-hover:scale-105 transition-transform text-lg">
-            CF
+            DF
           </div>
-          <span className="font-semibold text-lg">CodeForge</span>
+          <span className="font-semibold text-lg">DevForge</span>
         </Link>
+        {/* Desktop Navigation */}
         <div className="hidden md:flex items-center gap-6">
           <Link className="text-sm hover:text-purple-400 transition-colors" href="#features">Features</Link>
           <Link className="text-sm hover:text-purple-400 transition-colors" href="#demo">Demo</Link>
           <Link className="text-sm hover:text-purple-400 transition-colors" href="#pricing">Pricing</Link>
-          <Link href="/auth/signin" className="ml-4 px-5 py-2.5 rounded-lg bg-linear-to-r from-purple-500 to-pink-500 text-white font-medium hover:shadow-lg hover:scale-105 transition-all">
-            Start Free
-          </Link>
+          {!isLoading && (
+            isAuthenticated ? (
+              <Link href="/dashboard" className="ml-4 px-5 py-2.5 rounded-lg bg-linear-to-r from-purple-500 to-pink-500 text-white font-medium hover:shadow-lg hover:scale-105 transition-all">
+                Dashboard
+              </Link>
+            ) : (
+              <Link href="/auth/signin" className="ml-4 px-5 py-2.5 rounded-lg bg-linear-to-r from-purple-500 to-pink-500 text-white font-medium hover:shadow-lg hover:scale-105 transition-all">
+                Start Free
+              </Link>
+            )
+          )}
+        </div>
+        {/* Mobile Navigation */}
+        <div className="md:hidden">
+          {!isLoading && (
+            isAuthenticated ? (
+              <Link href="/dashboard" className="px-4 py-2 rounded-lg bg-linear-to-r from-purple-500 to-pink-500 text-white text-sm font-medium hover:shadow-lg hover:scale-105 transition-all">
+                Dashboard
+              </Link>
+            ) : (
+              <Link href="/auth/signin" className="px-4 py-2 rounded-lg bg-linear-to-r from-purple-500 to-pink-500 text-white text-sm font-medium hover:shadow-lg hover:scale-105 transition-all">
+                Start Free
+              </Link>
+            )
+          )}
         </div>
       </nav>
 
@@ -50,7 +76,7 @@ export default function Home() {
             <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold leading-tight">
               Build. Collaborate. Ship — Faster with{" "}
               <span className="bg-clip-text text-transparent bg-linear-to-r from-purple-400 to-pink-400">
-                CodeForge
+                DevForge
               </span>
             </h1>
           </motion.div>
@@ -70,13 +96,23 @@ export default function Home() {
             animate={{ opacity: 1 }} 
             transition={{ delay: 0.35 }}
           >
-            <Link 
-              href="/auth/signin" 
-              className="inline-flex items-center justify-center gap-3 px-8 py-4 rounded-full bg-linear-to-r from-purple-500 to-pink-500 text-white font-semibold shadow-xl hover:shadow-purple-500/25 hover:scale-105 transition-all"
-            >
-              Start Free
-              
-            </Link>
+            {!isLoading && (
+              isAuthenticated ? (
+                <Link 
+                  href="/dashboard" 
+                  className="inline-flex items-center justify-center gap-3 px-8 py-4 rounded-full bg-linear-to-r from-purple-500 to-pink-500 text-white font-semibold shadow-xl hover:shadow-purple-500/25 hover:scale-105 transition-all"
+                >
+                  Go to Dashboard
+                </Link>
+              ) : (
+                <Link 
+                  href="/auth/signin" 
+                  className="inline-flex items-center justify-center gap-3 px-8 py-4 rounded-full bg-linear-to-r from-purple-500 to-pink-500 text-white font-semibold shadow-xl hover:shadow-purple-500/25 hover:scale-105 transition-all"
+                >
+                  Start Free
+                </Link>
+              )
+            )}
            
           </motion.div>
 
@@ -98,12 +134,12 @@ export default function Home() {
                   <div className="w-3 h-3 rounded-full bg-red-400 hover:bg-red-500 transition-colors cursor-pointer" />
                   <div className="w-3 h-3 rounded-full bg-yellow-400 hover:bg-yellow-500 transition-colors cursor-pointer" />
                   <div className="w-3 h-3 rounded-full bg-green-400 hover:bg-green-500 transition-colors cursor-pointer" />
-                  <div className="ml-auto text-xs text-slate-400 font-mono">CodeForge • project/app.tsx</div>
+                  <div className="ml-auto text-xs text-slate-400 font-mono">DevForge • project/app.tsx</div>
                 </div>
                 <pre className="p-8 font-mono text-sm leading-7 text-slate-200 bg-[#0d0221]">
 {`<span className="text-purple-400">export</span> <span className="text-blue-400">async function</span> <span className="text-yellow-400">build</span>() {
   <span className="text-slate-400">// Real-time collaboration</span>
-  <span className="text-blue-400">console</span>.<span className="text-yellow-400">log</span>(<span className="text-green-400">'✨ CodeForge started'</span>)
+  <span className="text-blue-400">console</span>.<span className="text-yellow-400">log</span>(<span className="text-green-400">'✨ DevForge started'</span>)
   
   <span className="text-purple-400">await</span> <span className="text-yellow-400">deploy</span>({
     <span className="text-blue-300">preview</span>: <span className="text-orange-400">true</span>
@@ -175,7 +211,7 @@ export default function Home() {
           <Testimonial 
             name="Priya" 
             role="SDE @ DevCorp" 
-            quote="CodeForge removed onboarding friction for our new hires. From zero to productive in minutes." 
+            quote="DevForge removed onboarding friction for our new hires. From zero to productive in minutes." 
           />
           <Testimonial 
             name="Arjun" 
@@ -219,10 +255,10 @@ export default function Home() {
         <div className="flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 rounded-lg bg-linear-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white font-bold text-sm">
-              CF
+              DF
             </div>
             <div>
-              <div className="font-semibold">CodeForge</div>
+              <div className="font-semibold">DevForge</div>
               <div className="text-xs text-slate-400">© {new Date().getFullYear()} Built for developers</div>
             </div>
           </div>

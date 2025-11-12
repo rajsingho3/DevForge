@@ -34,7 +34,7 @@ interface FileNode {
 }
 
 interface FileExplorerProps {
-  playgroundId: string;
+  playgroundId?: string;
   onFileSelect: (path: string, content: string) => void;
   selectedFile: string | null;
 }

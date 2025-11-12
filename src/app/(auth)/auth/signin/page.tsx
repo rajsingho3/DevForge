@@ -11,9 +11,9 @@ export default function SignIn(){
             {/* Logo/Brand at top */}
             <Link href="/" className="flex items-center gap-3 group mb-4">
                 <div className="w-12 h-12 rounded-xl bg-linear-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white font-bold shadow-lg group-hover:scale-105 transition-transform text-xl">
-                    CF
+                    DF
                 </div>
-                <span className="font-semibold text-2xl text-slate-100">CodeForge</span>
+                <span className="font-semibold text-2xl text-slate-100">DevForge</span>
             </Link>
 
             <div className="flex flex-col items-center gap-6">
@@ -43,7 +43,7 @@ export default function SignIn(){
                     >
                         <LayoutTextFlip
                             text="Welcome to "
-                            words={["CodeForge", "Your Workspace", "Innovation"]}
+                            words={["DevForge", "Your Workspace", "Innovation"]}
                             duration={3000}
                         />
                     </motion.div>
